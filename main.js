@@ -52,7 +52,7 @@ define(function (require, exports, module) {
     
     
     function tabToSpace() {
-        var re = /\t/g;
+        var re = /^\t*/g;
         replaceInDocument(re, "    ");
     }
 
@@ -69,7 +69,7 @@ define(function (require, exports, module) {
 
     var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
     menu.addMenuDivider();
-    menu.addMenuItem("menu-file-tabtospace", TAB2S_COMMAND);
-    menu.addMenuItem("menu-file-spacetotab", S2TAB_COMMAND);
+    menu.addMenuItem(TAB2S_COMMAND);
+    menu.addMenuItem(S2TAB_COMMAND);
 
 });

@@ -5,6 +5,8 @@ A brackets extension to convert tabs to spaces and vice versa.
 
 To install, place the ```tabtospace``` folder inside the ```brackets/src/extensions/user``` folder.
 
+**Compatible with Brackets Sprint10**
+
 
 Notes
 =====
