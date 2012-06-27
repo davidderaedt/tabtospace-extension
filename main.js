@@ -40,43 +40,102 @@ define(function (require, exports, module) {
     var S2TAB_MENU_NAME = "Convert indentation to tabs";
 
     
+    // TODO use the actual tab width (space count) used by the editor
+    var defaultTabWidth    = 4;
+    var indentationMatcher = /^[ \t]+/gm;
+
 
     function replaceInDocument(re, textOrFunc) {
         var txt = DocumentManager.getCurrentDocument().getText();
         var txt2 = txt.replace(re, textOrFunc);
         DocumentManager.getCurrentDocument().setText(txt2);
     }
-    
-    
-    function tabToSpaceReplacer(match, p1, offset, string) {
-        var n = match.length;
-        var txt = "";
-        while (n > 0) {
-            txt += "    ";// TODO use the actual tab width (space count) used by the editor
-            n--;
-        }
-        return txt;
-    }
 
     
+    function lengthOfIndentation(string, tabWidth) {
+        var length = 0;
+        
+        for (var i = 0; i < string.length; i++) {
+            var c = string.charAt(i);
+            if (c === '\t') {
+                length += (tabWidth - (length % tabWidth));
+            } else {
+                length += 1;
+            }
+        }
+
+        return length;
+    }
+
+    function testLengthOfIndentation() {
+        var tabWidth = 4;
+
+        console.assert(0            === lengthOfIndentation("",       tabWidth));
+        console.assert(tabWidth     === lengthOfIndentation("\t",     tabWidth));
+        
+        console.assert(1            === lengthOfIndentation(" ",      tabWidth));
+        console.assert(2            === lengthOfIndentation("  ",     tabWidth));
+        console.assert(3            === lengthOfIndentation("   ",    tabWidth));
+        console.assert(4            === lengthOfIndentation("    ",   tabWidth));
+        
+        console.assert(tabWidth + 1 === lengthOfIndentation("\t ",    tabWidth));
+        console.assert(tabWidth + 2 === lengthOfIndentation("\t  ",   tabWidth));
+        console.assert(tabWidth + 3 === lengthOfIndentation("\t   ",  tabWidth));
+        console.assert(tabWidth + 4 === lengthOfIndentation("\t    ", tabWidth));
+        
+        console.assert(tabWidth     === lengthOfIndentation(" \t",    tabWidth));
+        console.assert(tabWidth     === lengthOfIndentation("  \t",   tabWidth));
+        console.assert(tabWidth     === lengthOfIndentation("   \t",  tabWidth));
+        console.assert(tabWidth + 4 === lengthOfIndentation("    \t", tabWidth));
+    }
+
+
+    function indentationWithLength(length, tabWidth) {
+        var indentation = "";
+        
+        // Use tabs if tabWidth is not undefined, null or 0
+        if (tabWidth) {
+            while (length >= tabWidth) {
+                indentation += "\t";
+                length -= tabWidth;
+            }
+        }
+        
+        while (length > 0) {
+            indentation += " ";
+            length -= 1;
+        }
+        
+        return indentation;
+    }
+
+    function testIndentationWithLength() {
+        var tabWidth = 4;
+        
+        for (var i = 0; i < 8; i++) {
+            console.assert(i === lengthOfIndentation(indentationWithLength(i, tabWidth), tabWidth));
+            console.assert(i === lengthOfIndentation(indentationWithLength(i),           tabWidth));
+        }
+    }
+    
+    
+    function tabToSpaceReplacer(indentation) {
+        var length = lengthOfIndentation(indentation, defaultTabWidth);
+        return indentationWithLength(length);
+    }
+
     function tabToSpace() {
-        replaceInDocument(/^\t+/gm, tabToSpaceReplacer);
+        replaceInDocument(indentationMatcher, tabToSpaceReplacer);
     }
 
 
-    function spaceToTabReplacer(match, p1, offset, string) {
-        var n = Math.floor(match.length / 4);
-        var txt = "";
-        while (n > 0) {
-            txt += "\t";
-            n--;
-        }
-        return txt;
+    function spaceToTabReplacer(indentation) {
+        var length = lengthOfIndentation(indentation, defaultTabWidth);
+        return indentationWithLength(length, defaultTabWidth);
     }
     
     function spaceToTab() {
-        // TODO use the actual tab width (space count) used by the editor
-        replaceInDocument(/^( {4})+/gm, spaceToTabReplacer);
+        replaceInDocument(indentationMatcher, spaceToTabReplacer);
     }
 
 
@@ -88,4 +147,6 @@ define(function (require, exports, module) {
     menu.addMenuItem(TAB2S_COMMAND);
     menu.addMenuItem(S2TAB_COMMAND);
 
+    testLengthOfIndentation();
+    testIndentationWithLength();
 });
