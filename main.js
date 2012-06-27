@@ -52,7 +52,7 @@ define(function (require, exports, module) {
     
     
     function tabToSpace() {
-        var re = /^\t*/g;
+        var re = /\t/gm;
         replaceInDocument(re, "    ");
     }
 
