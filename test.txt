@@ -1,3 +1,5 @@
+This file is used to test string replacement
+
 0
  1s
   2s
@@ -7,6 +9,6 @@
         8s-4s    
 
 	1t-1s 
-		2t-2s    
+		2t-2s  
 			3t
 0

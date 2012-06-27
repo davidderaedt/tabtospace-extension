@@ -36,31 +36,47 @@ define(function (require, exports, module) {
 
     var TAB2S_COMMAND   = "tabtospace.tabtospace";
     var S2TAB_COMMAND   = "tabtospace.spacetotab";
-    var TAB2S_MENU_NAME = "Convert tabs to spaces";
-    var S2TAB_MENU_NAME = "Convert spaces to tabs";
+    var TAB2S_MENU_NAME = "Convert indentation to spaces";
+    var S2TAB_MENU_NAME = "Convert indentation to tabs";
 
+    
 
-    function replaceInDocument(re, newText) {
-        
+    function replaceInDocument(re, textOrFunc) {
         var txt = DocumentManager.getCurrentDocument().getText();
-
-        var txt2 = txt.replace(re, newText);
-        
+        var txt2 = txt.replace(re, textOrFunc);
         DocumentManager.getCurrentDocument().setText(txt2);
-        
     }
     
+    
+    function tabToSpaceReplacer(match, p1, offset, string) {
+        var n = match.length;
+        var txt = "";
+        while (n > 0) {
+            txt += "    ";// TODO use the actual tab width (space count) used by the editor
+            n--;
+        }
+        return txt;
+    }
+
     
     function tabToSpace() {
-        var re = /\t/gm;
-        replaceInDocument(re, "    ");
+        replaceInDocument(/^\t+/gm, tabToSpaceReplacer);
     }
 
 
+    function spaceToTabReplacer(match, p1, offset, string) {
+        var n = Math.floor(match.length / 4);
+        var txt = "";
+        while (n > 0) {
+            txt += "\t";
+            n--;
+        }
+        return txt;
+    }
+    
     function spaceToTab() {
         // TODO use the actual tab width (space count) used by the editor
-        var re = / {4}/g;
-        replaceInDocument(re, "\t");
+        replaceInDocument(/^( {4})+/gm, spaceToTabReplacer);
     }
 
 
