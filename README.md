@@ -13,4 +13,4 @@ Usage
 
 Simply open a project in Brackets, and select ```Convert indentation to spaces``` or ```Convert indentation to tabs``` from the ```File``` menu.
 
-This will replace tabs with four spaces, and replace each group of four spaces with a tab.
+This will replace tabs with N spaces, and replace each group of N spaces with a tab (N being the tab length defined in the editor, 4 being the default).
