@@ -38,10 +38,8 @@ define(function (require, exports, module) {
     var S2TAB_COMMAND   = "tabtospace.spacetotab";
     var TAB2S_MENU_NAME = "Convert indentation to spaces";
     var S2TAB_MENU_NAME = "Convert indentation to tabs";
-
-    
-    var defaultTabWidth    = 4;
-    var indentationMatcher = /^[ \t]+/gm;
+    var DEFAULT_TAB_WIDTH    = 4;
+    var INDENTATION_MATCHER = /^[ \t]+/gm;
     
 
     function getTabWidth() {
@@ -50,7 +48,7 @@ define(function (require, exports, module) {
             return editor._codeMirror.getOption("tabSize");
         }
         console.log("Using default tab width");
-        return defaultTabWidth;
+        return DEFAULT_TAB_WIDTH;
     }
     
     
@@ -134,7 +132,7 @@ define(function (require, exports, module) {
     }
 
     function tabToSpace() {
-        replaceInDocument(indentationMatcher, tabToSpaceReplacer);
+        replaceInDocument(INDENTATION_MATCHER, tabToSpaceReplacer);
     }
 
 
@@ -145,7 +143,7 @@ define(function (require, exports, module) {
     }
     
     function spaceToTab() {
-        replaceInDocument(indentationMatcher, spaceToTabReplacer);
+        replaceInDocument(INDENTATION_MATCHER, spaceToTabReplacer);
     }
 
 
