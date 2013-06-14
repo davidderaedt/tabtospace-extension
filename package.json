@@ -3,7 +3,7 @@
     "title": "Tab To Space",
     "description": "Converts indentation to tabs or spaces.",
     "homepage": "https://github.com/davidderaedt/tabtospace-extension",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "author": "David Deraedt <dderaedt@adobe.com> (http://www.dehats.com)",
     "license": "MIT",
     "engines": {
