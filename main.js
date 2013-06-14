@@ -56,7 +56,7 @@ define(function (require, exports, module) {
         return DEFAULT_TAB_WIDTH;
     }
 
-    
+
     function replaceInDocument(re, textOrFunc) {
         var txt = DocumentManager.getCurrentDocument().getText();
         var txt2 = txt.replace(re, textOrFunc);
@@ -84,17 +84,17 @@ define(function (require, exports, module) {
 
         console.assert(0            === lengthOfIndentation("",       tabWidth));
         console.assert(tabWidth     === lengthOfIndentation("\t",     tabWidth));
-        
+
         console.assert(1            === lengthOfIndentation(" ",      tabWidth));
         console.assert(2            === lengthOfIndentation("  ",     tabWidth));
         console.assert(3            === lengthOfIndentation("   ",    tabWidth));
         console.assert(4            === lengthOfIndentation("    ",   tabWidth));
-        
+
         console.assert(tabWidth + 1 === lengthOfIndentation("\t ",    tabWidth));
         console.assert(tabWidth + 2 === lengthOfIndentation("\t  ",   tabWidth));
         console.assert(tabWidth + 3 === lengthOfIndentation("\t   ",  tabWidth));
         console.assert(tabWidth + 4 === lengthOfIndentation("\t    ", tabWidth));
-        
+
         console.assert(tabWidth     === lengthOfIndentation(" \t",    tabWidth));
         console.assert(tabWidth     === lengthOfIndentation("  \t",   tabWidth));
         console.assert(tabWidth     === lengthOfIndentation("   \t",  tabWidth));
@@ -104,7 +104,7 @@ define(function (require, exports, module) {
 
     function indentationWithLength(length, tabWidth) {
         var indentation = "";
-        
+
         // Use tabs if tabWidth is not undefined, null or 0
         if (tabWidth) {
             while (length >= tabWidth) {
@@ -112,7 +112,7 @@ define(function (require, exports, module) {
                 length -= tabWidth;
             }
         }
-        
+
         while (length > 0) {
             indentation += " ";
             length -= 1;
