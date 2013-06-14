@@ -24,7 +24,10 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
 /*global define, $, brackets, window */
 
-/** extension to convert indentation to tabs or spaces */
+/* https://github.com/davidderaedt/tabtospace-extension
+   extension to convert indentation to tabs or spaces
+   v1.1: + 4-space indentation to tabs */
+
 define(function (require, exports, module) {
     'use strict';
 
@@ -34,13 +37,15 @@ define(function (require, exports, module) {
         Menus           = brackets.getModule("command/Menus");
 
 
-    var TAB2S_COMMAND   = "tabtospace.tabtospace";
-    var S2TAB_COMMAND   = "tabtospace.spacetotab";
-    var TAB2S_MENU_NAME = "Convert indentation to spaces";
-    var S2TAB_MENU_NAME = "Convert indentation to tabs";
-    var DEFAULT_TAB_WIDTH    = 4;
+    var TAB2S_COMMAND    = "tabtospace.tabtospace";
+    var S2TAB_COMMAND    = "tabtospace.spacetotab";
+    var SD2TAB_COMMAND   = "tabtospace.spaceDToTab";
+    var TAB2S_MENU_NAME  = "Convert indentation to spaces";
+    var S2TAB_MENU_NAME  = "Convert indentation to tabs";
+    var SD2TAB_MENU_NAME = "Convert 4-space indentation to tabs";
+    var DEFAULT_TAB_WIDTH = 4;
     var INDENTATION_MATCHER = /^[ \t]+/gm;
-    
+
 
     function getTabWidth() {
         var editor = EditorManager.getCurrentFullEditor();
@@ -50,7 +55,7 @@ define(function (require, exports, module) {
         console.log("Using default tab width");
         return DEFAULT_TAB_WIDTH;
     }
-    
+
     
     function replaceInDocument(re, textOrFunc) {
         var txt = DocumentManager.getCurrentDocument().getText();
@@ -124,8 +129,8 @@ define(function (require, exports, module) {
             console.assert(i === lengthOfIndentation(indentationWithLength(i),           tabWidth));
         }
     }
-    
-    
+
+
     function tabToSpaceReplacer(indentation) {
         var length = lengthOfIndentation(indentation, getTabWidth());
         return indentationWithLength(length);
@@ -141,19 +146,31 @@ define(function (require, exports, module) {
         var length = lengthOfIndentation(indentation, editorTabWidth);
         return indentationWithLength(length, editorTabWidth);
     }
-    
+
     function spaceToTab() {
         replaceInDocument(INDENTATION_MATCHER, spaceToTabReplacer);
     }
 
 
-    CommandManager.register(TAB2S_MENU_NAME, TAB2S_COMMAND, tabToSpace);
-    CommandManager.register(S2TAB_MENU_NAME, S2TAB_COMMAND, spaceToTab);
+    function spaceDefaultToTabReplacer(indentation) {
+        var length = lengthOfIndentation(indentation, DEFAULT_TAB_WIDTH);
+        return indentationWithLength(length, DEFAULT_TAB_WIDTH);
+    }
 
-    var menu = Menus.getMenu(Menus.AppMenuBar.FILE_MENU);
+    function spaceDefaultToTab() {
+        replaceInDocument(INDENTATION_MATCHER, spaceDefaultToTabReplacer);
+    }
+
+
+    CommandManager.register(TAB2S_MENU_NAME,  TAB2S_COMMAND,  tabToSpace);
+    CommandManager.register(S2TAB_MENU_NAME,  S2TAB_COMMAND,  spaceToTab);
+    CommandManager.register(SD2TAB_MENU_NAME, SD2TAB_COMMAND, spaceDefaultToTab);
+
+    var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
     menu.addMenuDivider();
     menu.addMenuItem(TAB2S_COMMAND);
     menu.addMenuItem(S2TAB_COMMAND);
+    menu.addMenuItem(SD2TAB_COMMAND);
 
     testLengthOfIndentation();
     testIndentationWithLength();
